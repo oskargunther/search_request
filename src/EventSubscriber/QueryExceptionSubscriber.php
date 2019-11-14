@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class EventSubscriber implements EventSubscriberInterface
+class QueryExceptionSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {

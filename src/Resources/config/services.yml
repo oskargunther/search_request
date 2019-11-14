@@ -1,6 +1,7 @@
 services:
   search.request.service:
     class: Search\Request\SearchRequest
+    public: true
     arguments:
       - '@request_stack'
 
@@ -13,7 +14,7 @@ services:
       - { name: request.param_converter, converter: search_request }
 
   search.subscriber.bad_request_subscriber:
-    public: false
-    class: ConsultiaBundle\Subscriber\BadRequestExceptionSubscriber
+    public: true
+    class: Search\EventSubscriber\QueryExceptionSubscriber
     tags:
       - { name: kernel.event_subscriber, event: kernel.exception }
