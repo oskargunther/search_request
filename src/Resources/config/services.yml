@@ -5,7 +5,7 @@ services:
       - '@request_stack'
 
   search.request.param_converter:
-    class:
+    class: Search\ParamConverter\SearchRequestParamConverter
     arguments:
       - '@search.request.service'
     tags:
