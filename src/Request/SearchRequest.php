@@ -9,6 +9,7 @@
 namespace Search\Request;
 
 use Search\Request\Helper\Filter;
+use Search\Request\Helper\FilterField;
 use Search\Request\Helper\Pagination;
 use Search\Request\Helper\Sort;
 use Search\Request\Helper\Filters;
@@ -207,6 +208,25 @@ class SearchRequest
     {
         $this->allPages = true;
         $this->pagination = null;
+    }
+
+    public function isSearchingByRelation()
+    {
+        if(!$this->filters) {
+            return false;
+        }
+
+        /** @var Filter $filter */
+        foreach ($this->filters as $filter) {
+            /** @var FilterField $field */
+            foreach ($filter->getFields() as $field) {
+                if(strpos($field->getName(), '.') !== false) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }
