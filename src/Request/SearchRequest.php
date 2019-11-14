@@ -61,7 +61,6 @@ class SearchRequest implements SearchRequestInterface
     {
         $data = [];
 
-        !$this->pagination ?: $data['pagination'] = $this->pagination->toArray();
         !$this->filters ?: $data['filters'] = $this->filters->toArray();
         !$this->sort ?: $data['sort'] = $this->sort->toArray();
         $data['page'] = (int) $this->page;
