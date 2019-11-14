@@ -36,7 +36,7 @@ class Sort implements HelperInterface, SortInterface
     /**
      * @return string
      */
-    public function getField()
+    public function getField(): string
     {
         return $this->field;
     }
@@ -52,7 +52,7 @@ class Sort implements HelperInterface, SortInterface
     /**
      * @return string
      */
-    public function getDirection()
+    public function getDirection(): string
     {
         return $this->direction;
     }
