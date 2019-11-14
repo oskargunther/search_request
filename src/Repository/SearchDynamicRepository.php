@@ -17,7 +17,7 @@ use Search\Request\SearchRequestInterface;
 use Doctrine\ORM\QueryBuilder;
 use \Exception;
 
-abstract class SearchDynamicRepository extends SearchRepository
+abstract class SearchDynamicRepository
 {
     /** @var string[] */
     private $joins;

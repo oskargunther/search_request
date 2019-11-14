@@ -17,7 +17,7 @@ use Search\Request\Helper\PaginationInterface;
 use Search\Request\Helper\SortInterface;
 use Search\Request\SearchRequestInterface;
 
-abstract class SearchStaticRepository extends SearchRepository
+abstract class SearchStaticRepository
 {
 
     /** @return QueryBuilder */
