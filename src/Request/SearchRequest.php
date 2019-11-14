@@ -10,13 +10,16 @@ namespace Search\Request;
 
 use Search\Request\Helper\Filter;
 use Search\Request\Helper\FilterField;
+use Search\Request\Helper\FiltersInterface;
 use Search\Request\Helper\Pagination;
+use Search\Request\Helper\PaginationInterface;
 use Search\Request\Helper\Sort;
 use Search\Request\Helper\Filters;
+use Search\Request\Helper\SortInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SearchRequest
+class SearchRequest implements SearchRequestInterface
 {
     /** @var Request */
     private $request;
@@ -61,19 +64,24 @@ class SearchRequest
         !$this->pagination ?: $data['pagination'] = $this->pagination->toArray();
         !$this->filters ?: $data['filters'] = $this->filters->toArray();
         !$this->sort ?: $data['sort'] = $this->sort->toArray();
-        $data['page'] = $this->page;
-        $data['pageSize'] = $this->pageSize;
+        $data['page'] = (int) $this->page;
+        $data['pageSize'] = (int) $this->pageSize;
 
         return http_build_query($data);
     }
 
     private function handleRequest()
     {
+        $pageSize = (
+            $this->request->query->has('limit') ?
+                $this->request->query->get('limit') : $this->request->query->get('pageSize', 20)
+        );
+
         $this->parsePagination(
             $this->request->query->get('pagination', []),
             $this->request->query->get('allPages', 0),
             $this->request->query->get('page', 1),
-            $this->request->query->get('pageSize', 20)
+            $pageSize
         );
         $this->handleShortFilters();
         $this->parseSort($this->request->query->get('sort', []));
@@ -85,6 +93,7 @@ class SearchRequest
         $filters = $this->request->get('filter', []);
 
         foreach ($filters as $name => $value) {
+            $name = str_replace('$', '.', $name);
             $this->addFilter('and', $name, 'contains', $this->parseShortFilterValue($value));
         }
     }
@@ -174,27 +183,27 @@ class SearchRequest
         ]);
     }
 
-    public function getPagination()
+    public function getPagination(): PaginationInterface
     {
         return $this->pagination;
     }
 
-    public function getFilters()
+    public function getFilters(): FiltersInterface
     {
         return $this->filters;
     }
 
-    public function getSort()
+    public function getSort(): SortInterface
     {
         return $this->sort;
     }
 
-    public function getPage()
+    public function getPage(): int
     {
         return $this->page;
     }
 
-    public function getPageSize()
+    public function getPageSize(): int
     {
         return $this->pageSize;
     }

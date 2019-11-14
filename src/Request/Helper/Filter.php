@@ -9,7 +9,7 @@
 namespace Search\Request\Helper;
 
 
-class Filter implements HelperInterface
+class Filter implements HelperInterface, FilterInterface
 {
     /** @var  string */
     private $logic;
@@ -28,7 +28,7 @@ class Filter implements HelperInterface
 
     public function __construct(array $data)
     {
-        $this->setLogic($data['logic']);
+        $this->setLogic((string) $data['logic']);
         $this->fields = array_map(function(array $filterField) {
             return new FilterField($filterField);
         }, $data['fields']);
@@ -39,7 +39,7 @@ class Filter implements HelperInterface
     /**
      * @return string
      */
-    public function getLogic()
+    public function getLogic(): string
     {
         return $this->logic;
     }
@@ -55,7 +55,7 @@ class Filter implements HelperInterface
     /**
      * @return FilterField[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }

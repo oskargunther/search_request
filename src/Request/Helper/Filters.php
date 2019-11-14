@@ -8,7 +8,7 @@
 
 namespace Search\Request\Helper;
 
-class Filters implements HelperInterface
+class Filters implements HelperInterface, FiltersInterface
 {
     /**
      * @var Filter[]
@@ -32,7 +32,7 @@ class Filters implements HelperInterface
     /**
      * @return array
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters;
     }

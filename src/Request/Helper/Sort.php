@@ -8,7 +8,7 @@
 
 namespace Search\Request\Helper;
 
-class Sort implements HelperInterface
+class Sort implements HelperInterface, SortInterface
 {
     /**
      * @var string
@@ -21,8 +21,8 @@ class Sort implements HelperInterface
 
     public function __construct(array $data)
     {
-        $this->field = $data['field'];
-        $this->direction = $data['direction'];
+        $this->field = (string) $data['field'];
+        $this->direction = (string) $data['direction'];
     }
 
     public function toArray()

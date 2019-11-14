@@ -8,7 +8,7 @@
 
 namespace Search\Request\Helper;
 
-class FilterField implements HelperInterface
+class FilterField implements HelperInterface, FilterFieldInterface
 {
     /** @var  string */
     private $name;
@@ -19,11 +19,11 @@ class FilterField implements HelperInterface
 
     public function __construct(array $data)
     {
-        $this->name = $data['name'];
+        $this->name = (string) $data['name'];
         if(isset($data['value'])) {
             $this->value = $data['value'];
         }
-        $this->operator = $data['operator'];
+        $this->operator = (string) $data['operator'];
     }
 
     public function toArray()
@@ -38,7 +38,7 @@ class FilterField implements HelperInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -70,7 +70,7 @@ class FilterField implements HelperInterface
     /**
      * @return string
      */
-    public function getOperator()
+    public function getOperator(): string
     {
         return $this->operator;
     }

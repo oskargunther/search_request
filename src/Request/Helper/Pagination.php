@@ -8,7 +8,7 @@
 
 namespace Search\Request\Helper;
 
-class Pagination implements HelperInterface
+class Pagination implements HelperInterface, PaginationInterface
 {
     /**
      * @var integer
@@ -21,8 +21,8 @@ class Pagination implements HelperInterface
 
     public function __construct(array $data)
     {
-        $this->limit = $data['limit'];
-        $this->offset = $data['offset'];
+        $this->limit = (int) $data['limit'];
+        $this->offset = (int) $data['offset'];
     }
 
     public function toArray()
@@ -36,7 +36,7 @@ class Pagination implements HelperInterface
     /**
      * @return int
      */
-    public function getLimit()
+    public function getLimit(): int
     {
         return $this->limit;
     }
@@ -52,7 +52,7 @@ class Pagination implements HelperInterface
     /**
      * @return int
      */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }
