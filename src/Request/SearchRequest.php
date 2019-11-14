@@ -64,6 +64,8 @@ class SearchRequest implements SearchRequestInterface
         !$this->pagination ?: $data['pagination'] = $this->pagination->toArray();
         !$this->filters ?: $data['filters'] = $this->filters->toArray();
         !$this->sort ?: $data['sort'] = $this->sort->toArray();
+        $data['page'] = (int) $this->page;
+        $data['pageSize'] = (int) $this->pageSize;
 
         return http_build_query($data);
     }
@@ -76,7 +78,6 @@ class SearchRequest implements SearchRequestInterface
         );
 
         $this->parsePagination(
-            $this->request->query->get('pagination', []),
             $this->request->query->get('allPages', 0),
             $this->request->query->get('page', 1),
             $pageSize
@@ -108,13 +109,8 @@ class SearchRequest implements SearchRequestInterface
         }
     }
 
-    public function parsePagination(array $data, $allPages = false, $page = 1, $pageSize = 20)
+    public function parsePagination($allPages = false, $page = 1, $pageSize = 20)
     {
-        if(!empty($data)) {
-            $this->pagination = new Pagination($data);
-            return;
-        }
-
         if($allPages) {
             $this->allPages = true;
             return;
