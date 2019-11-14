@@ -115,6 +115,9 @@ class SearchRequest implements SearchRequestInterface
             return;
         }
 
+        $this->page = $page;
+        $this->pageSize = $pageSize;
+
         $this->pagination = new Pagination([
             'limit' => $pageSize,
             'offset' => ($page * $pageSize) - $pageSize
