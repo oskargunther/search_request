@@ -8,6 +8,7 @@
 
 namespace Search\Repository;
 
+use Doctrine\ORM\EntityRepository;
 use Search\Request\Helper\FilterFieldInterface;
 use Search\Request\Helper\FilterInterface;
 use Search\Request\Helper\FiltersInterface;
@@ -17,7 +18,7 @@ use Search\Request\SearchRequestInterface;
 use Doctrine\ORM\QueryBuilder;
 use \Exception;
 
-abstract class SearchDynamicRepository
+abstract class SearchDynamicRepository extends EntityRepository
 {
     /** @var string[] */
     private $joins;

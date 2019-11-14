@@ -9,6 +9,7 @@
 namespace Search\Repository;
 
 
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Search\Request\Helper\FilterFieldInterface;
 use Search\Request\Helper\FilterInterface;
@@ -17,7 +18,7 @@ use Search\Request\Helper\PaginationInterface;
 use Search\Request\Helper\SortInterface;
 use Search\Request\SearchRequestInterface;
 
-abstract class SearchStaticRepository
+abstract class SearchStaticRepository extends EntityRepository
 {
 
     /** @return QueryBuilder */
