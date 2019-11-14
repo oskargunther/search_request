@@ -18,8 +18,6 @@ use Search\Request\SearchRequestInterface;
 abstract class SearchStaticRepository extends SearchRepository
 {
 
-    private $paramCounter;
-
     /** @return QueryBuilder */
     abstract public function getQueryBuilder();
 
