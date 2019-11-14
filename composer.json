@@ -1,0 +1,20 @@
+{
+    "name": "oskargunther/search_request",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Oskar Gunther",
+            "email": "oskar.gunther94@gmail.com"
+        }
+    ],
+    "description": "Library to search through REST API",
+    "require": {
+        "php": ">=7.1",
+        "symfony/symfony": ">=2.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Search\\": "src"
+        }
+    }
+}
