@@ -10,11 +10,11 @@ use Search\Request\Helper\SortInterface;
 
 interface SearchRequestInterface
 {
-    public function getFilters(): FiltersInterface;
+    public function getFilters(): ?FiltersInterface;
 
-    public function getPagination(): PaginationInterface;
+    public function getPagination(): ?PaginationInterface;
 
-    public function getSort(): SortInterface;
+    public function getSort(): ?SortInterface;
 
     public function getPage(): int;
 

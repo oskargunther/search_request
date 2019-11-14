@@ -177,17 +177,17 @@ class SearchRequest implements SearchRequestInterface
         ]);
     }
 
-    public function getPagination(): PaginationInterface
+    public function getPagination(): ?PaginationInterface
     {
         return $this->pagination;
     }
 
-    public function getFilters(): FiltersInterface
+    public function getFilters(): ?FiltersInterface
     {
         return $this->filters;
     }
 
-    public function getSort(): SortInterface
+    public function getSort(): ?SortInterface
     {
         return $this->sort;
     }
