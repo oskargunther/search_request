@@ -6,11 +6,10 @@
  * Time: 10:29
  */
 
-namespace ConsultiaBundle\Repository;
+namespace Search\Repository;
 
 
 use Doctrine\ORM\QueryBuilder;
-use Search\Repository\SearchRepository;
 use Search\Request\Helper\FilterFieldInterface;
 use Search\Request\Helper\SortInterface;
 use Search\Request\SearchRequestInterface;
