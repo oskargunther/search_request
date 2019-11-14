@@ -3,3 +3,10 @@ services:
     class: Search\Request\SearchRequest
     arguments:
       - '@request_stack'
+
+  search.request.param_converter:
+    class:
+    arguments:
+      - '@search.request.service'
+    tags:
+      - { name: request.param_converter, converter: search_request }
