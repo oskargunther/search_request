@@ -8,5 +8,12 @@ services:
     class: Search\ParamConverter\SearchRequestParamConverter
     arguments:
       - '@search.request.service'
+    public: false
     tags:
       - { name: request.param_converter, converter: search_request }
+
+  search.subscriber.bad_request_subscriber:
+    public: false
+    class: ConsultiaBundle\Subscriber\BadRequestExceptionSubscriber
+    tags:
+      - { name: kernel.event_subscriber, event: kernel.exception }
