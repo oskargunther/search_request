@@ -48,7 +48,7 @@ class SearchRequest
         $this->filters = null;
 
         if($requestStack) {
-            $this->request = $requestStack;
+            $this->request = $requestStack->getCurrentRequest();
             $this->handleRequest();
         }
     }
@@ -74,8 +74,30 @@ class SearchRequest
             $this->request->query->get('page', 1),
             $this->request->query->get('pageSize', 20)
         );
+        $this->handleShortFilters();
         $this->parseSort($this->request->query->get('sort', []));
         $this->parseFilters($this->request->query->get('filters', []));
+    }
+
+    private function handleShortFilters()
+    {
+        $filters = $this->request->get('filter', []);
+
+        foreach ($filters as $name => $value) {
+            $this->addEqFilter($name, $this->parseShortFilterValue($value));
+        }
+    }
+
+    private function parseShortFilterValue($value)
+    {
+        switch ($value) {
+            case 'true':
+                return true;
+            case 'false':
+                return false;
+            default:
+                return $value;
+        }
     }
 
     public function parsePagination(array $data, $allPages = false, $page = 1, $pageSize = 20)
