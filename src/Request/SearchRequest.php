@@ -238,4 +238,12 @@ class SearchRequest implements SearchRequestInterface
         return false;
     }
 
+    public function sort(string $field, string $direction)
+    {
+        $this->sort = new Sort([
+            'field' => $field,
+            'direction' => $direction,
+        ]);
+    }
+
 }
