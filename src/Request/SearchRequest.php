@@ -84,7 +84,7 @@ class SearchRequest
         $filters = $this->request->get('filter', []);
 
         foreach ($filters as $name => $value) {
-            $this->addEqFilter($name, $this->parseShortFilterValue($value));
+            $this->addFilter('and', $name, 'contains', $this->parseShortFilterValue($value));
         }
     }
 
