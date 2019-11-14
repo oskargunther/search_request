@@ -123,8 +123,6 @@ class SearchRequest implements SearchRequestInterface
             'offset' => ($page * $pageSize) - $pageSize
         ]);
 
-        $this->pageSize = $pageSize;
-        $this->page = $page;
     }
 
     private function parseSort(array $data)
