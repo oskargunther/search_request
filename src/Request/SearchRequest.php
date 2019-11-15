@@ -42,6 +42,12 @@ class SearchRequest implements SearchRequestInterface
     /** @var integer */
     private $allPages;
 
+    /** @var boolean */
+    private $oneOrNullResult;
+
+    /** @var boolean */
+    private $countItems;
+
     public function __construct(RequestStack $requestStack)
     {
         $this->allPages = false;
@@ -50,6 +56,8 @@ class SearchRequest implements SearchRequestInterface
         $this->sort = null;
         $this->pagination = null;
         $this->filters = null;
+        $this->oneOrNullResult = false;
+        $this->countItems = true;
 
         if($requestStack) {
             $this->request = $requestStack->getCurrentRequest();
@@ -200,6 +208,26 @@ class SearchRequest implements SearchRequestInterface
     public function getPageSize(): int
     {
         return $this->pageSize;
+    }
+
+    public function getOneOrNullResult(): bool
+    {
+        return $this->oneOrNullResult;
+    }
+
+    public function countItems(): bool
+    {
+        return $this->countItems;
+    }
+
+    public function setCountItems(bool $countItems)
+    {
+        $this->countItems = $countItems;
+    }
+
+    public function setOneOrNullResult(bool $oneOrNullResult)
+    {
+        $this->oneOrNullResult = $oneOrNullResult;
     }
 
     public function getAllPages()

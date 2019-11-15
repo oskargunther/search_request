@@ -13,8 +13,3 @@ services:
     tags:
       - { name: request.param_converter, converter: search_request }
 
-  search.subscriber.bad_request_subscriber:
-    public: true
-    class: Search\EventSubscriber\QueryExceptionSubscriber
-    tags:
-      - { name: kernel.event_subscriber, event: kernel.exception }

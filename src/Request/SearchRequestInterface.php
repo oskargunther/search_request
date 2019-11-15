@@ -19,4 +19,8 @@ interface SearchRequestInterface
     public function getPage(): int;
 
     public function getPageSize(): int;
+
+    public function getOneOrNullResult(): bool;
+
+    public function countItems(): bool;
 }

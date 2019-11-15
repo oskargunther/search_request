@@ -9,6 +9,9 @@
 namespace Search\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\QueryException;
+use Search\Exception\BadRequestException;
+use Search\Exception\InvalidFilterException;
 use Search\Request\Helper\FilterFieldInterface;
 use Search\Request\Helper\FilterInterface;
 use Search\Request\Helper\FiltersInterface;
@@ -18,82 +21,74 @@ use Search\Request\SearchRequestInterface;
 use Doctrine\ORM\QueryBuilder;
 use \Exception;
 
-abstract class SearchDynamicRepository extends EntityRepository
+abstract class SearchRepository extends EntityRepository
 {
     /** @var string[] */
     private $joins;
 
+    /** @return string[] */
     abstract public function getRelations(): array;
 
     /** @return string */
-    abstract public function getMainAlias();
+    abstract public function getMainAlias(): string;
 
+    /** @return string[] */
     abstract public function getSelects(): array;
 
-    protected function getFieldNamesTranslations()
-    {
-        return [];
-    }
+    /** @return string[] */
+    abstract public function getFieldNameAliases(): array;
 
     public function getCountSelect()
     {
         return 'count('.$this->getMainAlias().')';
     }
 
-    public function findByRequest(
-        SearchRequestInterface $request,
-        $oneOrNullResult = false,
-        QueryBuilder $qb = null,
-        Callable $addSelects = null,
-        $rawReturn = false,
-        $count = true,
-        $selectOnlyMainClass = false
-    )
+    public function findByRequest(SearchRequestInterface $request)
     {
-        $this->joins = [];
-        if(!$qb) {
+        try {
+            $this->joins = [];
             $qb = $this->createQueryBuilder($this->getMainAlias());
-        }
 
-        $this->filter($qb, $request->getFilters());
+            $this->filter($qb, $request->getFilters());
 
-        if(!$rawReturn and $count) {
-            $count = $qb->select($this->getCountSelect())->getQuery()->getSingleScalarResult();
-        } else {
-            $count = null;
-        }
-
-        if($addSelects) {
-            $addSelects($qb);
-        } else {
-            if($selectOnlyMainClass) {
-                $qb->select($this->getMainAlias());
-            } else {
-                $qb->select($this->getSelects());
-                $this->joinForSelect($qb);
+            if($request->getOneOrNullResult()) {
+                return $qb->getQuery()->getOneOrNullResult();
             }
+
+            $count = $this->countItems($request, $qb);
+
+            $qb->select($this->getSelects());
+            $this->joinForSelect($qb);
+
+            $this->paginate($qb, $request->getPagination());
+            $this->sort($qb, $request->getSort());
+
+            return [
+                'items' => $qb->getQuery()->getResult(),
+                'total' => $count,
+                'pagination' => [
+                    'currentPage' => $request->getPage(),
+                    'pageSize' => $request->getPageSize()
+                ]
+            ];
+        } catch(QueryException $e) {
+            throw new BadRequestException('Search query failed to process: ' . $e->getMessage());
         }
+    }
 
-        $this->paginate($qb, $request->getPagination());
-        $this->sort($qb, $request->getSort());
+    private function countItems(SearchRequestInterface $searchRequest, QueryBuilder $qb): ?int
+    {
+        if($searchRequest->countItems()) {
+            if($searchRequest->isSearchingByRelation()) {
+                $countQb = $this->createQueryBuilder($this->getMainAlias());
+            } else {
+                $countQb = $qb;
+            }
 
-        if($oneOrNullResult) {
-            return $qb->getQuery()->getOneOrNullResult();
+            return (int) $countQb->select($this->getCountSelect())->getQuery()->getSingleScalarResult();
+        } else {
+            return null;
         }
-        $items = $qb->getQuery()->getResult();
-
-        if($rawReturn) {
-            return $items;
-        }
-
-        return [
-            'items' => $items,
-            'total' => intval($count),
-            'pagination' => [
-                'currentPage' => (int) $request->getPage(),
-                'pageSize' => (int) $request->getPageSize()
-            ]
-        ];
     }
 
     private function joinForSelect(QueryBuilder $qb)
@@ -198,8 +193,8 @@ abstract class SearchDynamicRepository extends EntityRepository
 
     protected function getFieldName($name)
     {
-        if(key_exists($name, $this->getFieldNamesTranslations())) {
-            return $this->getFieldNamesTranslations()[$name];
+        if(key_exists($name, $this->getFieldNameAliases())) {
+            return $this->getFieldNameAliases()[$name];
         }
 
         return $name;
@@ -247,8 +242,7 @@ abstract class SearchDynamicRepository extends EntityRepository
             case 'notIn':
                 return $qb->expr()->notIn($fieldName, ':'.$paramName);
             default:
-                return null;
-                break;
+                throw new InvalidFilterException('Unknown filter name: ' . $field->getOperator());
         }
     }
 }
