@@ -103,7 +103,7 @@ class SearchRequest implements SearchRequestInterface
             $name = str_replace('$', '.', $name);
             $parts = explode(':', $name);
             if(count($parts) === 2) {
-                $this->addFilter($name[1], $name[0], $this->parseShortFilterValue($value));
+                $this->addFilter($parts[1], $parts[0], $this->parseShortFilterValue($value));
             } else {
                 $this->addFilter($name, FilterFieldInterface::OPERATOR_AUTO, $this->parseShortFilterValue($value));
             }
