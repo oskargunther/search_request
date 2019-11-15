@@ -38,6 +38,9 @@ abstract class SearchRepository extends EntityRepository
     /** @return string[] */
     abstract public function getFieldNameAliases(): array;
 
+    /** @return string[] */
+    abstract public function getForbiddenFields(): array;
+
     public function getCountSelect()
     {
         return 'count('.$this->getMainAlias().')';
@@ -185,6 +188,9 @@ abstract class SearchRepository extends EntityRepository
 
         /** @var FilterFieldInterface $field */
         foreach ($filter->getFields() as $field) {
+            if(in_array($field->getName(), $this->getForbiddenFields())) {
+                throw new BadRequestException('Forbidden filter used');
+            }
             $expressions[] = $this->createExpression($qb, $field);
         }
 
