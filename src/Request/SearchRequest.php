@@ -74,6 +74,7 @@ class SearchRequest implements SearchRequestInterface
         !$this->sort ?: $data['sort'] = $this->sort->toArray();
         $data['page'] = (int) $this->page;
         $data['pageSize'] = (int) $this->pageSize;
+        $data['oneOrNullResult'] = (bool) $this->oneOrNullResult;
 
         return http_build_query($data);
     }
