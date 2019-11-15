@@ -101,7 +101,12 @@ class SearchRequest implements SearchRequestInterface
 
         foreach ($filters as $name => $value) {
             $name = str_replace('$', '.', $name);
-            $this->addFilter($name, FilterFieldInterface::OPERATOR_AUTO, $this->parseShortFilterValue($value));
+            $parts = explode(':', $name);
+            if(count($parts) === 2) {
+                $this->addFilter($name[1], $name[0], $this->parseShortFilterValue($value));
+            } else {
+                $this->addFilter($name, FilterFieldInterface::OPERATOR_AUTO, $this->parseShortFilterValue($value));
+            }
         }
     }
 
