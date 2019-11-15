@@ -93,6 +93,7 @@ class SearchRequest implements SearchRequestInterface
         $this->handleShortFilters();
         $this->parseSort($this->request->query->get('sort', []));
         $this->parseFilters($this->request->query->get('filters', []));
+        $this->oneOrNullResult = (bool) $this->request->query->get('oneOrNullResult', false);
     }
 
     private function handleShortFilters()
