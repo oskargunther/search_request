@@ -47,6 +47,10 @@ abstract class SearchRepository extends EntityRepository
         return 'count('.$this->getMainAlias().')';
     }
 
+    /**
+     * @param SearchRequestInterface $request
+     * @return mixed|SearchResponse
+     */
     public function findByRequest(SearchRequestInterface $request)
     {
         try {
