@@ -189,6 +189,7 @@ class SearchRequest implements SearchRequestInterface
             'limit' => 1,
             'offset' => 0,
         ]);
+        $this->setOneOrNullResult(true);
     }
 
     public function getPagination(): ?PaginationInterface
