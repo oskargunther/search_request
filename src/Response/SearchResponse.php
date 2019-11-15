@@ -24,9 +24,10 @@ class SearchResponse
      */
     private $pagination;
 
-    public function __construct(SearchRequestInterface $searchRequest, array $items)
+    public function __construct(SearchRequestInterface $searchRequest, array $items, int $total)
     {
         $this->items = $items;
+        $this->total = $total;
         $this->pagination = new PaginationResponse($searchRequest);
     }
 

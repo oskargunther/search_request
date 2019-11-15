@@ -67,7 +67,7 @@ abstract class SearchRepository extends EntityRepository
             $this->paginate($qb, $request->getPagination());
             $this->sort($qb, $request->getSort());
 
-            return new SearchResponse($request, $qb->getQuery()->getResult());
+            return new SearchResponse($request, $qb->getQuery()->getResult(), $count);
         } catch(QueryException $e) {
             throw new BadRequestException('Search query failed to process: ' . $e->getMessage());
         }
