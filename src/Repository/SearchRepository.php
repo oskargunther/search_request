@@ -20,6 +20,7 @@ use Search\Request\Helper\SortInterface;
 use Search\Request\SearchRequestInterface;
 use Doctrine\ORM\QueryBuilder;
 use \Exception;
+use Search\Response\SearchResponse;
 
 abstract class SearchRepository extends EntityRepository
 {
@@ -66,14 +67,7 @@ abstract class SearchRepository extends EntityRepository
             $this->paginate($qb, $request->getPagination());
             $this->sort($qb, $request->getSort());
 
-            return [
-                'items' => $qb->getQuery()->getResult(),
-                'total' => $count,
-                'pagination' => [
-                    'currentPage' => $request->getPage(),
-                    'pageSize' => $request->getPageSize()
-                ]
-            ];
+            return new SearchResponse($request, $qb->getQuery()->getResult());
         } catch(QueryException $e) {
             throw new BadRequestException('Search query failed to process: ' . $e->getMessage());
         }
