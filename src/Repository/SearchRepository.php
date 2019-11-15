@@ -209,46 +209,58 @@ abstract class SearchRepository extends EntityRepository
     public function filterField(QueryBuilder $qb, FilterFieldInterface $field, string $paramName, string $fieldName)
     {
         switch ($field->getOperator()) {
-            case 'contains':
+            case FilterFieldInterface::OPERATOR_CONTAINS:
                 $qb->setParameter($paramName, '%'.$field->getValue().'%');
                 return $qb->expr()->like($fieldName, ':'.$paramName);
-            case 'containsFromLeft':
+            case FilterFieldInterface::OPERATOR_CONTAINS_FROM_LEFT:
                 $qb->setParameter($paramName, $field->getValue().'%');
                 return $qb->expr()->like($fieldName, ':'.$paramName);
-            case 'eq':
+            case FilterFieldInterface::OPERATOR_EQ:
                 return $qb->expr()->eq($fieldName, ':'.$paramName);
-            case 'neq':
+            case FilterFieldInterface::OPERATOR_NEQ:
                 return $qb->expr()->neq($fieldName, ':'.$paramName);
-            case 'isEmpty':
+            case FilterFieldInterface::OPERATOR_IS_EMPTY:
                 $qb->setParameter('emptyParam', '');
                 return $qb->expr()->orX(
                     $qb->expr()->isNull($fieldName),
                     $qb->expr()->eq($fieldName, ':emptyParam')
                 );
-            case 'isNotEmpty':
+            case FilterFieldInterface::OPERATOR_IS_NOT_EMPTY:
                 $qb->setParameter('emptyParam', '');
                 return $qb->expr()->not($qb->expr()->orX(
                     $qb->expr()->isNull($fieldName),
                     $qb->expr()->eq($fieldName, ':emptyParam')
                 ));
-            case 'isNull':
+            case FilterFieldInterface::OPERATOR_IS_NULL:
                 return $qb->expr()->isNull($fieldName);
-            case 'isNotNull':
+            case FilterFieldInterface::OPERATOR_IS_NOT_NULL:
                 return $qb->expr()->isNotNull($fieldName);
-            case 'lt':
+            case FilterFieldInterface::OPERATOR_LT:
                 return $qb->expr()->lt($fieldName, ':'.$paramName);
-            case 'lte':
+            case FilterFieldInterface::OPERATOR_LTE:
                 return $qb->expr()->lte($fieldName, ':'.$paramName);
-            case 'gt':
+            case FilterFieldInterface::OPERATOR_GT:
                 return $qb->expr()->gt($fieldName, ':'.$paramName);
-            case 'gte':
+            case FilterFieldInterface::OPERATOR_GTE:
                 return $qb->expr()->gte($fieldName, ':'.$paramName);
-            case 'in':
+            case FilterFieldInterface::OPERATOR_IN:
                 return $qb->expr()->in($fieldName, ':'.$paramName);
-            case 'notIn':
+            case FilterFieldInterface::OPERATOR_NOT_IN:
                 return $qb->expr()->notIn($fieldName, ':'.$paramName);
+            case FilterFieldInterface::OPERATOR_AUTO:
+                return $this->createAutoFilter($qb, $field, $fieldName, $paramName);
             default:
                 throw new InvalidFilterException('Unknown filter name: ' . $field->getOperator());
+        }
+    }
+
+    private function createAutoFilter(QueryBuilder $qb, FilterFieldInterface $field, string $fieldName, string $paramName): string
+    {
+        if($fieldName === 'id' or preg_match('/(\.id)$/i', $fieldName)) {
+            return $qb->expr()->eq($fieldName, ':'.$paramName);
+        } else {
+            $qb->setParameter($paramName, '%'.$field->getValue().'%');
+            return $qb->expr()->like($fieldName, ':'.$paramName);
         }
     }
 }

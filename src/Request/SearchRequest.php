@@ -10,6 +10,7 @@ namespace Search\Request;
 
 use Search\Request\Helper\Filter;
 use Search\Request\Helper\FilterField;
+use Search\Request\Helper\FilterFieldInterface;
 use Search\Request\Helper\FiltersInterface;
 use Search\Request\Helper\Pagination;
 use Search\Request\Helper\PaginationInterface;
@@ -100,7 +101,7 @@ class SearchRequest implements SearchRequestInterface
 
         foreach ($filters as $name => $value) {
             $name = str_replace('$', '.', $name);
-            $this->addFilter('and', $name, 'contains', $this->parseShortFilterValue($value));
+            $this->addFilter($name, FilterFieldInterface::OPERATOR_AUTO, $this->parseShortFilterValue($value));
         }
     }
 
@@ -149,18 +150,18 @@ class SearchRequest implements SearchRequestInterface
 
     public function addEqFilter($field, $value)
     {
-        $this->addFilter('and', $field, 'eq', $value);
+        $this->addFilter($field, FilterFieldInterface::OPERATOR_EQ, $value);
     }
 
     public function addInFilter($field, array $value)
     {
-        $this->addFilter('and', $field, 'in', $value);
+        $this->addFilter($field, FilterFieldInterface::OPERATOR_IN, $value);
     }
 
-    public function addFilter($logic, $field, $operator, $value = 0)
+    public function addFilter($field, $operator, $value = 0)
     {
         $filter = new Filter([
-            'logic' => $logic,
+            'logic' => 'and',
             'fields' =>[
                 [
                     'name' => $field,
