@@ -254,11 +254,20 @@ abstract class SearchRepository extends EntityRepository
 
     private function createAutoFilter(QueryBuilder $qb, FilterFieldInterface $field, string $fieldName, string $paramName): string
     {
-        if($fieldName === 'id' or preg_match('/(\.id)$/i', $fieldName)) {
-            return $qb->expr()->eq($fieldName, ':'.$paramName);
+        if(is_string($field->getValue()) and strpos($field->getValue(), ',') !== false) {
+
+            $qb->setParameter($paramName, explode(',', $field->getValue()));
+            return $qb->expr()->in($fieldName, ':'.$paramName);
+
         } else {
-            $qb->setParameter($paramName, '%'.$field->getValue().'%');
-            return $qb->expr()->like($fieldName, ':'.$paramName);
+
+            if($fieldName === 'id' or preg_match('/(\.id)$/i', $fieldName)) {
+                return $qb->expr()->eq($fieldName, ':'.$paramName);
+            } else {
+                $qb->setParameter($paramName, '%'.$field->getValue().'%');
+                return $qb->expr()->like($fieldName, ':'.$paramName);
+            }
+
         }
     }
 }
