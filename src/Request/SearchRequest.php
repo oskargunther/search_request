@@ -266,7 +266,7 @@ class SearchRequest implements SearchRequestInterface
         }
 
         /** @var Filter $filter */
-        foreach ($this->filters as $filter) {
+        foreach ($this->filters->getFilters() as $filter) {
             /** @var FilterField $field */
             foreach ($filter->getFields() as $field) {
                 if(strpos($field->getName(), '.') !== false) {
