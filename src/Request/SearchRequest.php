@@ -83,7 +83,9 @@ class SearchRequest implements SearchRequestInterface
             $data['oneOrNullResult'] = (bool) $this->oneOrNullResult;
         }
 
-        $data['allPages'] = $this->getAllPages();
+        if($this->allPages) {
+            $data['allPages'] = $this->getAllPages();
+        }
 
         return http_build_query($data);
     }
