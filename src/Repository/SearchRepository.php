@@ -80,13 +80,7 @@ abstract class SearchRepository extends EntityRepository
     private function countItems(SearchRequestInterface $searchRequest, QueryBuilder $qb): ?int
     {
         if($searchRequest->countItems()) {
-            if($searchRequest->isSearchingByRelation()) {
-                $countQb = $this->createQueryBuilder($this->getMainAlias());
-            } else {
-                $countQb = $qb;
-            }
-
-            return (int) $countQb->select($this->getCountSelect())->getQuery()->getSingleScalarResult();
+            return (int) $qb->select($this->getCountSelect())->getQuery()->getSingleScalarResult();
         } else {
             return null;
         }
