@@ -11,9 +11,6 @@ namespace Search\Request\Helper;
 
 class Filter implements HelperInterface, FilterInterface
 {
-    const LOGIC_AND = 'and';
-    const LOGIC_OR = 'or';
-
     /** @var  string */
     private $logic;
     /** @var  FilterField[] */
