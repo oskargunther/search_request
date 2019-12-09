@@ -68,4 +68,13 @@ class Filter implements HelperInterface, FilterInterface
         $this->fields[] = $field;
     }
 
+    public function createField(string $fieldName, string $operator, $value = 0)
+    {
+        $field = new FilterField();
+        $field->setName($fieldName);
+        $field->setOperator($operator);
+        $field->setValue($value);
+        $this->addField($field);
+    }
+
 }
