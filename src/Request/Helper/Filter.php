@@ -11,6 +11,9 @@ namespace Search\Request\Helper;
 
 class Filter implements HelperInterface, FilterInterface
 {
+    const LOGIC_AND = 'and';
+    const LOGIC_OR = 'or';
+
     /** @var  string */
     private $logic;
     /** @var  FilterField[] */
@@ -26,14 +29,14 @@ class Filter implements HelperInterface, FilterInterface
         ];
     }
 
-    public function __construct(array $data)
+    public function __construct(array $data = null)
     {
-        $this->setLogic((string) $data['logic']);
-        $this->fields = array_map(function(array $filterField) {
-            return new FilterField($filterField);
-        }, $data['fields']);
-
-
+        if(!empty($data)) {
+            $this->setLogic((string) $data['logic']);
+            $this->fields = array_map(function(array $filterField) {
+                return new FilterField($filterField);
+            }, $data['fields']);
+        }
     }
 
     /**
@@ -60,13 +63,9 @@ class Filter implements HelperInterface, FilterInterface
         return $this->fields;
     }
 
-    /**
-     * @param FilterField[] $fields
-     */
-    public function setFields($fields)
+    public function addField(FilterField $field)
     {
-        $this->fields = $fields;
+        $this->fields[] = $field;
     }
-
 
 }

@@ -156,29 +156,38 @@ class SearchRequest implements SearchRequestInterface
         }
     }
 
-    public function addEqFilter($field, $value)
+    public function addEqFilter($fieldName, $value)
     {
-        $this->addFilter($field, FilterFieldInterface::OPERATOR_EQ, $value);
+        $filter = new Filter();
+        $filter->setLogic(Filter::LOGIC_AND);
+
+        $field = new FilterField();
+        $field->setName($fieldName);
+        $field->setOperator(FilterFieldInterface::OPERATOR_EQ);
+        $field->setValue($value);
+
+        $filter->addField($field);
+
+        $this->addFilter($filter);
     }
 
-    public function addInFilter($field, array $value)
+    public function addInFilter($fieldName, array $value)
     {
-        $this->addFilter($field, FilterFieldInterface::OPERATOR_IN, $value);
+        $filter = new Filter();
+        $filter->setLogic(Filter::LOGIC_AND);
+
+        $field = new FilterField();
+        $field->setName($fieldName);
+        $field->setOperator(FilterFieldInterface::OPERATOR_IN);
+        $field->setValue($value);
+
+        $filter->addField($field);
+
+        $this->addFilter($filter);
     }
 
-    public function addFilter($field, $operator, $value = 0)
+    public function addFilter(Filter $filter)
     {
-        $filter = new Filter([
-            'logic' => 'and',
-            'fields' =>[
-                [
-                    'name' => $field,
-                    'operator' => $operator,
-                    'value' => $value
-                ]
-            ]
-        ]);
-
         if(!$this->filters) {
             $this->filters = new Filters([]);
         }

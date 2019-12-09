@@ -17,13 +17,15 @@ class FilterField implements HelperInterface, FilterFieldInterface
     /** @var  string */
     private $operator;
 
-    public function __construct(array $data)
+    public function __construct(array $data = null)
     {
-        $this->name = (string) $data['name'];
-        if(isset($data['value'])) {
-            $this->value = $data['value'];
+        if(!empty($data)) {
+            $this->name = (string) $data['name'];
+            if(isset($data['value'])) {
+                $this->value = $data['value'];
+            }
+            $this->operator = (string) $data['operator'];
         }
-        $this->operator = (string) $data['operator'];
     }
 
     public function toArray()
