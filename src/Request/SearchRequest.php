@@ -106,9 +106,11 @@ class SearchRequest implements SearchRequestInterface
             $name = str_replace('$', '.', $name);
             $parts = explode(':', $name);
             if(count($parts) === 2) {
-                $this->addFilter($parts[1], $parts[0], $this->parseShortFilterValue($value));
+                $this->addOperatorFilter($parts[1], $parts[0], $this->parseShortFilterValue($value));
+            } elseif($value === 'null') {
+                $this->addOperatorFilter(FilterFieldInterface::OPERATOR_IS_NULL, $name, $value);
             } else {
-                $this->addFilter($name, FilterFieldInterface::OPERATOR_AUTO, $this->parseShortFilterValue($value));
+                $this->addOperatorFilter(FilterFieldInterface::OPERATOR_AUTO, $name, $this->parseShortFilterValue($value));
             }
         }
     }
@@ -154,6 +156,21 @@ class SearchRequest implements SearchRequestInterface
         if(!empty($data)) {
             $this->filters = new Filters($data);
         }
+    }
+
+    public function addOperatorFilter(string $operator, string $fieldName, $value = 0)
+    {
+        $filter = new Filter();
+        $filter->setLogic(Filter::LOGIC_AND);
+
+        $field = new FilterField();
+        $field->setName($fieldName);
+        $field->setOperator($operator);
+        $field->setValue($value);
+
+        $filter->addField($field);
+
+        $this->addFilter($filter);
     }
 
     public function addEqFilter($fieldName, $value)
