@@ -106,7 +106,7 @@ class SearchRequest implements SearchRequestInterface
             $name = str_replace('$', '.', $name);
             $parts = explode(':', $name);
             if(count($parts) === 2) {
-                $this->addOperatorFilter($parts[1], $parts[0], $this->parseShortFilterValue($value));
+                $this->addOperatorFilter($parts[0], $parts[1], $this->parseShortFilterValue($value));
             } elseif($value === 'null') {
                 $this->addOperatorFilter(FilterFieldInterface::OPERATOR_IS_NULL, $name, $value);
             } else {
